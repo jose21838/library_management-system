@@ -1,0 +1,109 @@
+
+    body{
+      background-color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      padding-top: 0px;
+      margin-left: 260x;
+    }
+    .leftbar {
+      width: 250px;
+      background: #222;
+      color: white;
+      height: 700px;
+      padding: 20px;
+      position: fixed;
+      display: inline-block;
+      
+    }
+    .dashboard{
+      width:240px;
+      height: 40px;
+    }
+    .leftbar a{
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;      
+          
+    }
+    .mainbody{
+      vertical-align: top;
+      width: 1200px;
+      margin-left:290px;
+      display: inline-block;
+      
+    }
+    .navbar{
+      margin-left: 20px;
+      color: #fff;
+      background-color: #1f7429;
+      width: 1200px;
+      height: 40px;
+      position: fixed;
+      margin-top: 0px;
+    }
+    .navbar button{
+      margin:10px 0px 10px 900px;
+      border-radius: 30px;
+      position:right;
+      background-color: #c4c4c4;
+      border-width: 0;
+
+    }
+    .section {
+      display: none;
+      width:1000px;
+      margin-left:40px;
+      padding: 20px;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+      position: fixed;
+    }
+    .booksection{
+      display: none;
+      width:800px;
+      margin-left:30px;
+      padding: 20px;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+    .booksection.active{
+      display: block;
+    }
+    .booksection p{
+      display: inline-block;     
+    }
+    .booksection button{
+      margin-left: 10px;
+    }
+    .firstsection {
+      display: none;
+      width:1000px;
+      margin-left:310px;
+      padding: 20px;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+    
+  .section.active {
+      display: block; 
+  }
+  .feedbox{
+    display: block;
+    width:500px;
+    height:150px;
+    margin-bottom: 50px;
+  }
+  a{
+    text-decoration: none;
+  }
+  

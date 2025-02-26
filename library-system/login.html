@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <style>
+      /* User Login Page Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+header {
+  background-color:  #009688;
+  color: white;
+  padding: 15px;
+}
+
+.login-form {
+  background: white;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h2 {
+  margin-bottom: 20px;
+}
+
+.login-form label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.login-form button:hover {
+  background-color: #555;
+}
+
+.login-form p {
+  margin-top: 15px;
+}
+
+.login-form a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.login-form a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  font-size: 14px
+}
+    </style>
+   
+</head>
+<body>
+    <header>
+        <h1>User Login</h1>
+    </header>
+
+    <main>
+        <section class="login-form">
+            <h2>Login to Your Account</h2>
+            <form id="loginForm" action="dashboard.html" method="GET" >
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="usersignup.html">Register here</a></p>
+        </section>
+    </main>
+
+    <footer>
+      <p class="copyright">&copy; Copyright Super Readers 2025 <strong> All Rights Reserved</strong></p>
+  </footer>
+
+   
+</body>
+</html>

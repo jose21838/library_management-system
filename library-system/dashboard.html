@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  
+  <div  class="leftbar">
+    <div class="dashboard">
+      <h2>USER DASHBOARD</h2>
+    </div>
+    <a href="#" onclick="showSection('borrowmaterials')">Borrow materials</a>
+    <a href="#" onclick="showSection('payments')">Make Payments</a>    
+    <a href="#" onclick="showSection('notifications')" >Notifications</a>
+    <a href="#">Return Books</a>
+    <a href="#" onclick="showSection('reserve resources')">Reserve Resources</a>
+    <a href="#"onclick="showSection('feedback')">Provide Feedback</a>
+    
+  </div>
+  <div class="mainbody">
+    <div class="navbar">
+     <button onclick="redirectToLogin()" type="button"><span></span>LOG OUT</button>
+     <script>
+      function redirectToLogin() {
+          window.location.href = "library.html";
+      }
+     </script>
+    </div>
+    <div id="firstsection" class="section">
+      <h2>Welcome to the user dashboard</h2>
+      <p>Choose an action from the list on the left</p>  
+    </div>
+    
+    <div id="borrowmaterials" class="section">
+      <h2>Browse the categories of books</h2>
+      <button><a href="#" onclick="showCategory('novels')">Novels</a></button>
+      <button><a href="#" onclick="showCategory('technology')">Technology</a></button>
+      <button><a href="#" onclick="showCategory('science')">Science</a></button>
+      <button><a href="#" onclick="showCategory('history')">History</a></button>
+      <button><a href="#" onclick="showCategory('health')">Health</a></button>
+      
+      <div id="novels" class="booksection">
+        <h3>Novels</h3>
+        <p>Anthills of the Savannah</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The promised land</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The winds of change</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Things fall Apart</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The silence of the lambs</p><button>Borrow</button><button>Add to cart</button><br>
+      </div>  
+      <div id="health" class="booksection">
+        <h3>Health & Wellness Books</h3>
+        <p>The China Study</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>How Not to Die</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The Obesity Code</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Atomic Habits (Health & Behavior)</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Eat to Beat Disease</p><button>Borrow</button><button>Add to cart</button><br>
+      </div>
+      <div id="technology" class="booksection">
+        <h3>Technology Books</h3>
+        <p>Clean Code</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The Pragmatic Programmer</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Artificial Intelligence: A Guide for Thinking Humans</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Introduction to the Theory of Computation</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Cybersecurity and Cyberwar: What Everyone Needs to Know</p><button>Borrow</button><button>Add to cart</button><br>
+      </div>
+      <div id="history" class="booksection">
+        <h3>History Books</h3>
+        <p>Sapiens: A Brief History of Humankind</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>A People's History of the United States</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The Silk Roads: A New History of the World</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Guns, Germs, and Steel</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The Diary of a Young Girl (Anne Frank)</p><button>Borrow</button><button>Add to cart</button><br>
+      </div>
+      <div id="science" class="booksection">
+        <h3>Scientific Books</h3>
+        <p>The making of plastics</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Mastering organic chemistry</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>Dive into the theory of thermodynamics</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>The interstellar</p><button>Borrow</button><button>Add to cart</button><br>
+        <p>A daily dose of kinetics</p><button>Borrow</button><button>Add to cart</button><br>
+      </div>
+      
+      
+       
+    </div>
+    <div id="payments" class="section">
+      <h2>Make Payments</h2>
+      <p>Choose what you are paying for:</p>
+      <select class="payment" id="payment" >
+        <option value="" disabled selected>Select </option>
+        <option value="fees">Booking fees</option>
+        <option value="Subscription">Subscription</option>
+        <option value="Fines">Fines</option>
+    </select>
+    <p>Enter amount</p>
+    <input name="Amount" type="text">
+      <button>Pay Now</button>
+    </div>
+    <div id="feedback" class="section">
+      <h2>What's your feedback?</h2> 
+      <p>We woud love to hear from you</p>
+      <textarea class="feedbox" placeholder="Type your feedback here" rows="5"></textarea>
+      <button>Submit</button>
+  </div>
+  <div id="notifications" class="section">
+    <h2>There are no new notifications right now </h2>
+  </div>
+  <div id="reserve resources" class="section">
+    <select class="resources" id="resources" >
+      <option value="" disabled selected>Choose a resource to reserve </option>
+      <option value="fees">Study rooms</option>
+      <option value="Subscription">Computeres</option>
+      <option value="Fines">Tables</option>
+  </select>
+  </div>
+  </div>
+
+  </div>
+  
+
+<script>
+  function showSection(sectionId) {    
+    document.querySelectorAll(".section").forEach(section => {
+        section.style.display = "none";
+    });
+    
+    document.getElementById(sectionId).style.display = "block";
+}
+
+  function showCategory(categoryId) {  
+    document.querySelectorAll("#borrowmaterials .booksection").forEach(section => {
+        section.style.display = "none";
+    });
+    document.getElementById(categoryId).style.display = "block";
+  }
+  showSection('firstsection');
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+*{
+  margin:0;
+  padding:0;
+  font-family:sans-serif;
+}
+.banner{
+  width:100%;
+  height:100vh;
+  background-image: 
+  linear-gradient(rgba(0,0,0,0.70),rgba(0,0,0,0.70)),url('lib2.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.navbar{
+  width:100%;
+  z-index: 1000;  
+  height:30px;
+  margin:auto;
+  padding:35px 0;
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #020f0d;
+  position: fixed;
+
+}
+.logo{
+  width:70px;
+  cursor:pointer;
+  border-radius: 50%;
+  margin-left: 70px;
+}
+.navbar ul li{
+  list-style: none;
+  display: inline-block;
+  margin:0 20px;
+  position: relative;
+}
+.navbar ul li a{
+  text-decoration: none;
+  color:#fff;
+  text-transform: uppercase;
+}
+.navbar ul li::after{
+  content:'';
+  height:3px;
+  width:0;
+  background:#009688;
+  position:absolute;
+  left:0;
+  bottom:-10px;
+  transition:0.5s;
+
+}
+
+.navbar ul li:hover::after{
+  width:100%;
+ 
+}
+.content{
+  width:100%;
+  position:absolute;
+  top:50%;
+  transform: translateY(-50%);
+  text-align: center;
+  color:#fff;
+}
+.content h1{
+  font-size: 90px;
+  margin-top: 80px;
+}
+.content p{
+  margin:20px auto;
+  font-weight: 100;
+  line-height: 25px;
+}
+button{
+  width:200px;
+  padding:15px 0;
+  text-align: center;
+  margin: 20px 10px;
+  border-radius:25px;
+  font-weight:bold;
+  border:2px solid #009688;
+  background: transparent;
+  color:#fff;
+  cursor:pointer;
+  position:relative;
+  overflow: hidden;
+}
+span{
+  background:#009688;
+  height:100%;
+  width:0;
+  border-radius: 25px;
+  position:absolute;
+  left:0;
+  bottom:0;
+  z-index: -1;
+  transition:0.5s;
+}
+button:hover span{
+  width:100%;
+}
+button:hover{
+  border:none;
+}
+.signup{
+  color:#009688;
+}
+
+.signup:hover{
+  color:#020f0d;
+}
+footer {
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  font-size: 14px;
+}
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+.about-section {
+  padding: 80px 20px;
+  background: #f4f4f9;
+  text-align: center;
+  scroll-margin-top: 30px;
+}
+
+.about-section h2 {
+  font-size: 40px;
+  color: #333;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.about-section p {
+  color: #555;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-section .team {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.team-member {
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 250px;
+  text-align: center;
+  
+}
+
+.team-member img {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.team-member h3 {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.team-member p {
+  color: #777;
+  font-size: 16px;
+}
+.reserved{
+  color:#009688;
+}
+#features {
+  padding: 50px 0;
+  scroll-margin-top: 50px;
+}
+
+#features .container h2, #benefits .container h2, #testimonials .container h2, #pricing .container h2, #cta .container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 40px;
+}
+
+#features .feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+#features .feature {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+#features .feature img {
+  width: 50px;
+  margin-bottom: 10px;
+}
+
+#benefits {
+  background: #f4f4f9;
+  padding: 50px 0;
+  scroll-margin-top: 50px;
+}
+#benefits .container h2,h3, p{
+  text-align: center;
+}
+
+#benefits .benefit-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+}
+
+#benefits .benefit {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+#testimonials {
+  padding: 50px 0;
+  background-color: #fff;
+  scroll-margin-top: 30px;
+}
+
+#testimonials .testimonial {
+  text-align: center;
+  font-style: italic;
+  color: #555;
+  padding: 20px;
+  border: 2px solid #2b2929;
+  border-radius: 8px;
+}
