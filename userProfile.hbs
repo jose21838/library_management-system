@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My Profile - Library</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="main.js"></script>
+    <script src="navigation.js"></script>
+    <style>
+        /* General styles */
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        * {
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        /* Sidebar (Leftbar) */
+        .leftbar {
+            width: 250px;
+            background: #222;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            transition: all 0.3s ease-in-out;
+            margin-top: 50px;
+            z-index: 100;
+        }
+
+        /* Hide sidebar on small screens */
+        @media screen and (max-width: 768px) {
+            .leftbar {
+                width: 60px;
+                overflow: hidden;
+            }
+
+            .leftbar a {
+                text-align: center;
+                font-size: 12px;
+                padding: 5px;
+            }
+
+            .leftbar h2 {
+                display: none;
+            }
+        }
+
+        /* Main body */
+        .mainbody {
+            flex: 1;
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* Adjust main content for smaller screens */
+        @media screen and (max-width: 768px) {
+            .mainbody {
+                margin-left: 80px;
+                padding: 10px;
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #009688;
+            width: 100%;
+            height: 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 200;
+        }
+
+        .navbar button {
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 16px;
+            cursor: pointer;
+            margin-right: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .navbar button:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Enhanced Profile Section Styles */
+        #profile {
+            display: block;
+            /* Make sure the profile section is visible by default */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 70px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #profile h2 {
+            color: #009688;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            font-size: 24px;
+        }
+
+        #profile p {
+            margin: 12px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            transition: background-color 0.2s;
+        }
+
+        #profile p:hover {
+            background-color: #f0f0f0;
+        }
+
+        #profile strong {
+            display: inline-block;
+            width: 120px;
+            color: #555;
+        }
+
+        /* Profile edit button */
+        .edit-profile-btn {
+            background-color: #009688;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+
+        .edit-profile-btn:hover {
+            background-color: #00796b;
+        }
+
+        /* Responsive adjustments for profile */
+        @media screen and (max-width: 768px) {
+            #profile {
+                padding: 15px;
+                margin-top: 60px;
+            }
+
+            #profile strong {
+                width: 100px;
+                font-size: 14px;
+            }
+
+            #profile p {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            width: 90%;
+            max-width: 1000px;
+            margin: 80px auto 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive sections */
+        @media screen and (max-width: 768px) {
+            .section {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+        /* Book sections */
+        .booksection {
+            display: none;
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive book sections */
+        @media screen and (max-width: 768px) {
+            .booksection {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+        /* Buttons */
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1f7429;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #165c1f;
+        }
+
+        /* Responsive buttons */
+        @media screen and (max-width: 768px) {
+            button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* Feedback box */
+        .feedbox {
+            width: 100%;
+            max-width: 500px;
+            height: 150px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+
+        /* Adjustments for mobile */
+        @media screen and (max-width: 480px) {
+            .feedbox {
+                width: 90%;
+                height: 120px;
+            }
+        }
+
+        /* Links */
+        .leftbar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .leftbar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .leftbar a.active {
+            background: #009688;
+        }
+
+        /* Hide text inside links on small screens */
+        @media screen and (max-width: 768px) {
+            .leftbar a {
+                text-align: center;
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+
+        #payments {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #payments .container {
+            background: white;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #payments form {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        #payments label {
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
+
+        #payments input,
+        #payments select {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #payments button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #payments button:hover {
+            background-color: #218838;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #payments #confirmationMessage {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* Wrapper for responsive and shadow effect */
+        .table-wrapper {
+            overflow-x: auto;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 16px;
+        }
+
+        .resource-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .resource-table thead {
+            background-color: #009688;
+            color: white;
+        }
+
+        .resource-table th,
+        .resource-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+
+        .resource-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .qty-input {
+            width: 70px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+
+        .reserve-btn {
+            background-color: #009688;
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .reserve-btn:hover {
+            background-color: #00796b;
+        }
+
+        /* Dashboard header styling */
+        .dashboard h2 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 25px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="leftbar">
+        <div class="dashboard">
+            <h2>USER DASHBOARD</h2>
+        </div>
+        <a href="/userProfile" class="active"><i class="fas fa-user"></i> My Profile</a>
+        <a href="/borrow"><i class="fas fa-book"></i> Borrow Books</a>
+        <a href="/cart"><i class="fas fa-shopping-cart"></i> My Cart</a>
+        <a href="/payments"><i class="fas fa-credit-card"></i> Make Payments</a>
+        <a href="/return"><i class="fas fa-undo"></i> Return Books</a>
+        <a href="/history"><i class="fas fa-history"></i> Booking History</a>
+        <a href="/reserve"><i class="fas fa-bookmark"></i> Reserve Resources</a>
+        <a href="/feedback"><i class="fas fa-comment"></i> Provide Feedback</a>
+        <a href="/help"><i class="fas fa-question-circle"></i> Help and Support</a>
+        <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+
+    <div class="mainbody">
+        <div class="navbar">
+            <button class="logout-btn" onclick="redirectToLogout()" type="button"><i class="fas fa-sign-out-alt"></i>
+                LOG OUT</button>
+        </div>
+
+        <div id="profile" class="section">
+            <h2><i class="fas fa-user-circle"></i> My Profile</h2>
+            <p><strong>Name:</strong> {{fullname}}</p>
+            <p><strong>Username:</strong> {{username}}</p>
+            <p><strong>Email:</strong> {{email}}</p>
+            <p><strong>Phone Number:</strong> {{phoneNumber}}</p>
+            <button class="edit-profile-btn" onclick="editProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+        </div>
+    </div>
+
+    <script>
+        function redirectToLogout() {
+            window.location.href = "/userLogout";
+        }
+
+        function editProfile() {
+            // Redirect to edit profile page or open edit modal
+            window.location.href = "/editProfile";
+        }
+
+        // Make sure the profile section is visible when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('profile').style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>

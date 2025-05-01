@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Return Books - Library</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/navigation.js"></script>
+    <style>
+       /* Variables for consistent colors and sizing */
+:root {
+  --primary-color: #009688;
+  --primary-dark: #00796b;
+  --secondary-color: #1f7429;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --bg-light: #ffffff;
+  --bg-gray: #f4f4f4;
+  --border-color: #dddddd;
+  --shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  --radius: 5px;
+  --spacing-sm: 8px;
+  --spacing-md: 15px;
+  --spacing-lg: 20px;
+  --sidebar-width: 250px;
+  --sidebar-collapsed: 60px;
+  --header-height: 50px;
+}
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-gray);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Layout Components */
+.navbar {
+  background-color: var(--primary-color);
+  height: var(--header-height);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.leftbar {
+  width: var(--sidebar-width);
+  background: #222;
+  color: var(--text-light);
+  height: 100vh;
+  padding: var(--spacing-lg);
+  position: fixed;
+  transition: all 0.3s ease-in-out;
+  margin-top: var(--header-height);
+  z-index: 90;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.mainbody {
+  flex: 1;
+  margin-left: calc(var(--sidebar-width) + var(--spacing-lg));
+  padding: var(--spacing-lg);
+  transition: margin-left 0.3s ease-in-out;
+  padding-top: calc(var(--header-height) + var(--spacing-lg));
+}
+
+/* Navigation Elements */
+.dashboard h2 {
+  margin-bottom: var(--spacing-lg);
+  font-size: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: var(--spacing-md);
+}
+
+.leftbar a {
+  display: flex;
+  align-items: center;
+  color: var(--text-light);
+  padding: 12px var(--spacing-md);
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.leftbar a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(2px);
+}
+
+.leftbar a.active {
+  background: var(--primary-color);
+  font-weight: bold;
+}
+
+.leftbar a i {
+  margin-right: 10px;
+  width: 18px;
+  text-align: center;
+}
+
+.logout-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: var(--text-light);
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Content Sections */
+.section {
+  background: var(--bg-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.section h2 {
+  color: var(--primary-dark);
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  background-color: var(--bg-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-top: var(--spacing-md);
+}
+
+#returnTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#returnTable thead {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+#returnTable th,
+#returnTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#returnTable tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+#returnTable tbody tr:hover {
+  background-color: rgba(0, 150, 136, 0.05);
+}
+
+/* Form Elements */
+button {
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover:not(:disabled) {
+  background-color: #2a8d38;
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.book-select {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+/* Fine Summary */
+.fine-summary {
+  margin-top: var(--spacing-lg);
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+  padding: var(--spacing-md);
+  border-radius: var(--radius);
+}
+
+.fine-summary h3 {
+  color: #e65100;
+  margin-bottom: var(--spacing-sm);
+}
+
+#totalFineAmount {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .leftbar {
+    width: var(--sidebar-collapsed);
+    padding: var(--spacing-sm);
+  }
+  
+  .leftbar a {
+    padding: 12px var(--spacing-sm);
+    justify-content: center;
+  }
+  
+  .leftbar a span, 
+  .leftbar h2 {
+    display: none;
+  }
+  
+  .mainbody {
+    margin-left: calc(var(--sidebar-collapsed) + var(--spacing-sm));
+    padding: var(--spacing-sm);
+  }
+  
+  .section {
+    padding: var(--spacing-md);
+  }
+  
+  #returnTable th,
+  #returnTable td {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mainbody {
+    margin-left: 0;
+    padding-left: calc(var(--sidebar-collapsed) + var(--spacing-sm));
+  }
+  
+  .section h2 {
+    font-size: 18px;
+  }
+  
+  #returnTable th:nth-child(3),
+  #returnTable td:nth-child(3) {
+    display: none; /* Hide category column on very small screens */
+  }
+}
+
+/* Animation for feedback */
+@keyframes highlight {
+  0% { background-color: transparent; }
+  30% { background-color: rgba(0, 150, 136, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.highlight-row {
+  animation: highlight 2s ease-in-out;
+}
+    </style>
+</head>
+
+<body>
+    <div class="leftbar">
+        <div class="dashboard">
+            <h2>USER DASHBOARD</h2>
+        </div>
+        <a href="/userProfile">My Profile</a>
+        <a href="/borrow">Borrow Books</a>
+        <a href="/cart">My Cart</a>
+        <a href="/payments">Make Payments</a>
+        <a href="/return" class="active">Return Books</a>
+        <a href="/history">Booking History</a>
+        <a href="/reserve">Reserve Resources</a>
+        <a href="/feedback">Provide Feedback</a>
+        <a href="/help">Help and Support</a>
+        <a href="/settings">Settings</a>
+    </div>
+
+    <div class="mainbody">
+        <div class="navbar">
+            <button class="logout-btn" onclick="redirectToLogout()" type="button"><span></span>LOG OUT</button>
+        </div>
+
+        <div id="returnBooks" class="section">
+            <h2>Books to Return</h2>
+            <table id="returnTable" border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Checked Out</th>
+                        <th>Expected Return</th>
+                        <th>Days Overdue</th>
+                        <th>Fine Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="returnList">
+                    {{#if activeBooks.length}}
+                    {{#each activeBooks}}
+                    <tr>
+                        <td><input type="checkbox" class="book-select" data-book-id="{{this.book_id}}"
+                                data-booking-id="{{this.booking_id}}" /></td>
+                        <td>{{this.title}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{formatDate this.booking_date}}</td>
+                        <td>{{formatDate this.expected_return_date}}</td>
+                        <td>{{#if this.daysOverdue}}{{this.daysOverdue}}{{else}}Not overdue{{/if}}</td>
+                        <td>{{#if this.fine}}${{this.fine}}{{else}}No fine{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td colspan="7">No books to return</td>
+                    </tr>
+                    {{/if}}
+                </tbody>
+            </table>
+            <button id="returnBooksButton" onclick="handleReturnBooks()" {{#unless
+                activeBooks.length}}disabled{{/unless}}>Return Selected Books</button>
+            {{#if totalFine}}
+            <div id="finesSummary" class="fine-summary">
+                <h3>Fine Summary</h3>
+                <p id="totalFineAmount">Total Fine: ${{totalFine}}</p>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <script>
+        function redirectToLogout() {
+            window.location.href = "/userLogout";
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!checkLogin()) return;
+            document.getElementById('returnBooks').style.display = "block";
+        });
+
+        // Function to toggle the return button based on selected books
+        function toggleReturnButton() {
+            const returnButton = document.getElementById("returnBooksButton");
+            const selectedBooks = document.querySelectorAll(".book-select:checked");
+            returnButton.disabled = selectedBooks.length === 0;
+        }
+
+        // Add event listeners to checkboxes
+        document.querySelectorAll(".book-select").forEach(checkbox => {
+            checkbox.addEventListener("change", toggleReturnButton);
+        });
+
+        // Return Selected Books
+        function handleReturnBooks() {
+            const selectedBooks = document.querySelectorAll(".book-select:checked");
+
+            if (selectedBooks.length === 0) {
+                alert("Please select at least one book to return");
+                return;
+            }
+
+            // Prepare array for multiple books
+            const booksToReturn = [];
+            selectedBooks.forEach(book => {
+                booksToReturn.push({
+                    booking_id: book.getAttribute("data-booking-id"),
+                    book_id: book.getAttribute("data-book-id")
+                });
+            });
+
+            // Send all books in a single request
+            fetch("/api/books/return", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(booksToReturn.length === 1 ? booksToReturn[0] : booksToReturn)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(result.message);
+
+                        // Show fine details if available
+                        if (result.results && result.results.length > 0) {
+                            const fineDetails = result.results.filter(item => item.fine > 0);
+                            if (fineDetails.length > 0) {
+                                const totalFine = fineDetails.reduce((sum, item) => sum + item.fine, 0);
+                                if (totalFine > 0) {
+                                    alert(`Fine(s) totaling $${totalFine.toFixed(2)} have been added to your account for overdue books.`);
+                                }
+                            }
+                        }
+
+                        window.location.reload(); // Refresh the page after return
+                    } else {
+                        alert("Error: " + result.message);
+                        console.error("Return errors:", result.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Failed to process book returns. Please try again.");
+                });
+        }
+    </script>
+</body>
+
+</html>

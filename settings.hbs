@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Settings</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/navigation.js"></script>
+    <style>
+        /* General styles */
+body {
+  background-color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  
+}
+*{
+  text-decoration: none;
+}
+/* Sidebar (Leftbar) */
+.leftbar {
+  width: 250px;
+  background: #222;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  transition: all 0.3s ease-in-out;
+  margin-top: 50px;
+}
+
+/* Hide sidebar on small screens */
+@media screen and (max-width: 768px) {
+  .leftbar {
+    width: 60px;
+    overflow: hidden;
+  }
+
+  .leftbar a {
+    text-align: center;
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .leftbar h2 {
+    display: none;
+  }
+}
+
+/* Main body */
+.mainbody {
+  flex: 1;
+  margin-left: 270px;
+  padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* Adjust main content for smaller screens */
+@media screen and (max-width: 768px) {
+  .mainbody {
+    margin-left: 80px;
+    padding: 10px;
+  }
+}
+
+/* Navbar */
+.navbar {
+  background-color: #009688;
+  width: 100%;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.navbar button {
+  background-color: #c4c4c4;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 40px;
+}
+
+/* Sections */
+.section {
+  display: none;
+  width: 90%;
+  max-width: 1000px;
+  margin: 80px auto 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive sections */
+@media screen and (max-width: 768px) {
+  .section {
+    width: 95%;
+    padding: 15px;
+  }
+}
+
+/* Book sections */
+.booksection {
+  display: none;
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive book sections */
+@media screen and (max-width: 768px) {
+  .booksection {
+    width: 95%;
+    padding: 15px;
+  }
+}
+
+/* Buttons */
+button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1f7429;
+  color: white;
+  cursor: pointer;
+}
+
+/* Responsive buttons */
+@media screen and (max-width: 768px) {
+  button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Feedback box */
+.feedbox {
+  width: 100%;
+  max-width: 500px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+/* Adjustments for mobile */
+@media screen and (max-width: 480px) {
+  .feedbox {
+    width: 90%;
+    height: 120px;
+  }
+}
+
+/* Links */
+.leftbar a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  margin: 10px 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.leftbar a:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Hide text inside links on small screens */
+@media screen and (max-width: 768px) {
+  .leftbar a {
+    text-align: center;
+    padding: 8px;
+    font-size: 12px;
+  }
+}
+#payments {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  text-align: center;
+  padding: 20px;
+}
+
+#payments .container {
+  background: white;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#payments form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+#payments label {
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+
+#payments input,
+#payments select {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#payments button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#payments button:hover {
+  background-color: #218838;
+}
+
+.hidden {
+  display: none;
+}
+
+#payments #confirmationMessage {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  border: 1px solid #c3e6cb;
+}
+/* Wrapper for responsive and shadow effect */
+.table-wrapper {
+  overflow-x: auto;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 16px;
+}
+
+.resource-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.resource-table thead {
+  background-color: #009688;
+  color: white;
+}
+
+.resource-table th,
+.resource-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.resource-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.qty-input {
+  width: 70px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+.reserve-btn {
+  background-color: #009688;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reserve-btn:hover {
+  background-color: #00796b;
+}
+    </style>
+</head>
+
+<body>
+    <div class="leftbar">
+        <div class="dashboard">
+            <h2>USER DASHBOARD</h2>
+        </div>
+        <a href="/userProfile">My Profile</a>
+        <a href="/borrow">Borrow Books</a>
+        <a href="/cart">My Cart</a>
+        <a href="/payments">Make Payments</a>
+        <a href="/return">Return Books</a>
+        <a href="/history">Booking History</a>
+        <a href="/reserve">Reserve Resources</a>
+        <a href="/feedback">Provide Feedback</a>
+        <a href="/help">Help and Support</a>
+        <a href="/settings" class="active">Settings</a>
+    </div>
+
+    <div class="mainbody">
+        <div class="navbar">
+            <button class="logout-btn" onclick="redirectToLogout()" type="button"><span></span>LOG OUT</button>
+        </div>
+
+        <div id="settings" class="section">
+            <h2>Settings</h2>
+
+            <div class="settings-tabs">
+                <button class="tab-button active" onclick="openSettingsTab('profile-settings')">Profile</button>
+                <button class="tab-button" onclick="openSettingsTab('password-settings')">Password</button>
+            </div>
+
+            <!-- Profile Settings Tab -->
+            <div id="profile-settings" class="settings-tab active">
+                <h3>Profile Information</h3>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" name="full_name" value="{{user.Fullname}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="{{user.Email}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact Number</label>
+                        <input type="tel" id="contact" name="contact" value="{{user.phone_number}}">
+                    </div>
+                    <button type="submit" class="save-button">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Password Settings Tab -->
+            <div id="password-settings" class="settings-tab">
+                <h3>Change Password</h3>
+                <form id="password-form">
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="current_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="new_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="confirm_password" required>
+                    </div>
+                    <button type="submit" class="save-button">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToLogout() {
+            window.location.href = "/userLogout";
+        }
+
+        // Tab switching functionality
+        function openSettingsTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.settings-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Activate clicked button
+            event.currentTarget.classList.add('active');
+        }
+
+        // Update profile information
+        document.getElementById('profile-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                full_name: document.getElementById('full-name').value,
+                email: document.getElementById('email').value,
+                contact: document.getElementById('contact').value
+            };
+
+            fetch("/api/profile/update", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.message || `Server error: ${response.status}`);
+                        }).catch(() => {
+                            // If response isn't JSON
+                            throw new Error(`Server error: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert("Profile updated successfully!");
+                    } else {
+                        throw new Error(data.message || "Unknown error occurred");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error updating profile:", error);
+                    alert(`Failed to update profile: ${error.message}`);
+                });
+        });
+
+        // Change password
+        document.getElementById('password-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (newPassword !== confirmPassword) {
+                alert("New passwords don't match!");
+                return;
+            }
+
+            fetch("/api/change-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.message || `Server error: ${response.status}`);
+                        }).catch(() => {
+                            // If response isn't JSON
+                            throw new Error(`Server error: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert("Password changed successfully!");
+                        document.getElementById('password-form').reset();
+                    } else {
+                        throw new Error(data.message || "Unknown error occurred");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error changing password:", error);
+                    alert(`Failed to change password: ${error.message}`);
+                });
+        });
+    </script>
+</body>
+
+</html>

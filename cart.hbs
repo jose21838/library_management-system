@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My Cart - Library</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/navigation.js"></script>
+<style>
+    /* General styles */
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+
+    * {
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+
+    /* Sidebar (Leftbar) */
+    .leftbar {
+        width: 250px;
+        background: #222;
+        color: white;
+        height: 100vh;
+        padding: 20px;
+        position: fixed;
+        transition: all 0.3s ease-in-out;
+        z-index: 10;
+    }
+
+    .dashboard {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Hide sidebar on small screens */
+    @media screen and (max-width: 768px) {
+        .leftbar {
+            width: 60px;
+            overflow: hidden;
+        }
+
+        .leftbar a {
+            text-align: center;
+            font-size: 12px;
+            padding: 5px;
+        }
+
+        .leftbar h2 {
+            display: none;
+        }
+    }
+
+    /* Main body */
+    .mainbody {
+        flex: 1;
+        margin-left: 250px;
+        padding: 20px;
+        transition: margin-left 0.3s ease-in-out;
+    }
+
+    /* Adjust main content for smaller screens */
+    @media screen and (max-width: 768px) {
+        .mainbody {
+            margin-left: 60px;
+            padding: 10px;
+        }
+    }
+
+    /* Navbar */
+    .navbar {
+        background-color: #009688;
+        width: 100%;
+        height: 60px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 5;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 30px;
+        padding: 8px 16px;
+        cursor: pointer;
+        color: white;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .logout-btn:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .logout-btn span {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/></svg>');
+        background-size: cover;
+    }
+
+    /* Sections */
+    .section {
+        width: 90%;
+        max-width: 1000px;
+        margin: 80px auto 20px;
+        padding: 25px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Links */
+    .leftbar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        transition: background 0.3s;
+        font-weight: 500;
+    }
+
+    .leftbar a:hover,
+    .leftbar a.active {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .leftbar a.active {
+        border-left: 4px solid #009688;
+    }
+
+    /* Cart Table Styling */
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-table th {
+        background-color: #f5f5f5;
+        font-weight: 600;
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 2px solid #ddd;
+        color: #444;
+    }
+
+    .cart-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+
+    .cart-table tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .cart-table .book-title {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .cart-table .book-author {
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 3px;
+    }
+
+    .cart-table .book-id {
+        color: #999;
+        font-size: 0.8em;
+        margin-top: 3px;
+    }
+
+    .cart-table .book-category {
+        color: #666;
+        font-size: 0.8em;
+        margin-top: 3px;
+    }
+
+    .cart-table .book-publication {
+        color: #666;
+        font-size: 0.8em;
+        margin-top: 3px;
+    }
+
+    .cart-table .quantity-cell {
+        display: flex;
+        align-items: center;
+    }
+
+    .qty-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .qty-btn {
+        background: #f1f1f1;
+        border: none;
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #555;
+        padding: 0;
+        margin: 0;
+    }
+
+    .qty-input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+
+    .remove-btn {
+        background-color: #ff5252;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .remove-btn:hover {
+        background-color: #e04141;
+    }
+
+    .book-image {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        background-color: #eee;
+    }
+
+    .total-row {
+        font-weight: 600;
+        background-color: #f5f5f5;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    .continue-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+
+    .continue-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .checkout-btn {
+        background-color: #009688;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    .checkout-btn:hover {
+        background-color: #00796b;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 40px 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .empty-cart i {
+        font-size: 48px;
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+
+    .empty-cart h3 {
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .empty-cart p {
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    .browse-btn {
+        background-color: #009688;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    .browse-btn:hover {
+        background-color: #00796b;
+    }
+
+    /* Summary box */
+    .cart-summary {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .summary-row:last-child {
+        border-bottom: none;
+        font-weight: 600;
+        padding-top: 12px;
+    }
+
+    .summary-label {
+        color: #555;
+    }
+
+    .summary-value {
+        font-weight: 500;
+    }
+
+    /* Loading spinner */
+    .spinner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        display: none;
+    }
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #009688;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .due-date-info {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #0d47a1;
+    }
+</style>
+</head>
+
+<body>
+    <div class="spinner-overlay" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="leftbar">
+        <div class="dashboard">
+            <h2>USER DASHBOARD</h2>
+        </div>
+        <a href="/userProfile">My Profile</a>
+        <a href="/borrow">Borrow Books</a>
+        <a href="/cart" class="active">My Cart</a>
+        <a href="/payments">Make Payments</a>
+        <a href="/return">Return Books</a>
+        <a href="/history">Booking History</a>
+        <a href="/reserve">Reserve Resources</a>
+        <a href="/feedback">Provide Feedback</a>
+        <a href="/help">Help and Support</a>
+        <a href="/settings">Settings</a>
+    </div>
+
+    <div class="mainbody">
+        <div class="navbar">
+            <button class="logout-btn" onclick="redirectToLogout()" type="button"><span></span>LOG OUT</button>
+        </div>
+
+        <div id="cart" class="section">
+            <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+            <div id="cart-content">
+                {{#if cartItems.length}}
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Details</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each cartItems}}
+                        <tr data-book-id="{{this.book_id}}">
+                            <td width="80">
+                                {{#if this.cover_image}}
+                                <img src="{{this.cover_image}}" alt="{{this.title}}" class="book-image">
+                                {{else}}
+                                <div class="book-image" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-book" style="font-size: 24px;"></i>
+                                </div>
+                                {{/if}}
+                            </td>
+                            <td>
+                                <div class="book-title">{{this.title}}</div>
+                                {{#if this.author}}
+                                <div class="book-author">by {{this.author}}</div>
+                                {{/if}}
+                                <div class="book-id">ID: {{this.book_id}}</div>
+                                {{#if this.category}}
+                                <div class="book-category">Category: {{this.category}}</div>
+                                {{/if}}
+                                {{#if this.publication_year}}
+                                <div class="book-publication">Published: {{this.publication_year}}</div>
+                                {{/if}}
+                                {{#if this.isbn}}
+                                <div class="book-isbn">ISBN: {{this.isbn}}</div>
+                                {{/if}}
+                            </td>
+                            <td>
+                                <div class="quantity-cell">
+                                    <div class="qty-control">
+                                        <button class="qty-btn" onclick="updateQuantity('{{this.book_id}}', -1)">-</button>
+                                        <input type="number" value="{{this.quantity}}" min="1" max="{{this.available_copies}}" class="qty-input" data-book-id="{{this.book_id}}" onchange="manualQuantityUpdate(this)">
+                                        <button class="qty-btn" onclick="updateQuantity('{{this.book_id}}', 1)">+</button>
+                                    </div>
+                                </div>
+                                {{#if this.available_copies}}
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                    {{this.available_copies}} copies available
+                                </div>
+                                {{/if}}
+                            </td>
+                            <td>
+                                <button class="remove-btn" onclick="removeFromCart('{{this.book_id}}')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Total Books:</span>
+                        <span class="summary-value">{{totalItems}} item(s)</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Volumes:</span>
+                        <span class="summary-value">{{totalQuantity}} copy/copies</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Due Date:</span>
+                        <span class="summary-value">{{formatDate dueDate}}</span>
+                    </div>
+                </div>
+
+                <div class="due-date-info">
+                    <i class="fas fa-info-circle"></i> Books are due <strong>{{loanPeriod}} days</strong> after
+                    checkout. Please return items by their due date to avoid fines.
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/borrow" class="continue-btn">
+                        <i class="fas fa-arrow-left"></i> Continue Browsing
+                    </a>
+                    <button class="checkout-btn" onclick="checkoutCart()">
+                        <i class="fas fa-check"></i> Checkout Now
+                    </button>
+                </div>
+                {{else}}
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-basket"></i>
+                    <h3>Your cart is empty</h3>
+                    <p>Explore our collection and add some books to your cart.</p>
+                    <a href="/borrow" class="browse-btn">Browse Books</a>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToLogout() {
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'flex';
+
+            // Clear localStorage when logging out
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("username");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("token");
+
+            window.location.href = "/userLogout";
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        function removeFromCart(bookId) {
+            showLoading();
+
+            fetch("/api/cart/remove", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": "{{csrfToken}}" // Add CSRF protection if implemented
+                },
+                body: JSON.stringify({ book_id: bookId })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    hideLoading();
+
+                    // Show success message
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message || "Item removed from cart"
+                    });
+
+                    // Refresh the page or update cart via AJAX
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error("Error removing book from cart:", error);
+                    hideLoading();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to remove item. Please try again.'
+                    });
+                });
+        }
+
+        function updateQuantity(bookId, change) {
+            const inputElement = document.querySelector(`input.qty-input[data-book-id="${bookId}"]`);
+            let currentQty = parseInt(inputElement.value);
+            let newQty = currentQty + change;
+
+            // Ensure quantity is within valid range
+            const maxQty = parseInt(inputElement.getAttribute('max'));
+            newQty = Math.max(1, Math.min(newQty, maxQty));
+
+            if (newQty !== currentQty) {
+                inputElement.value = newQty;
+                updateCartQuantity(bookId, newQty);
+            }
+        }
+
+        function manualQuantityUpdate(inputElement) {
+            const bookId = inputElement.getAttribute('data-book-id');
+            let newQty = parseInt(inputElement.value);
+            const maxQty = parseInt(inputElement.getAttribute('max'));
+
+            // Validate input
+            if (isNaN(newQty) || newQty < 1) {
+                newQty = 1;
+                inputElement.value = 1;
+            } else if (newQty > maxQty) {
+                newQty = maxQty;
+                inputElement.value = maxQty;
+            }
+
+            updateCartQuantity(bookId, newQty);
+        }
+
+        function updateCartQuantity(bookId, quantity) {
+            showLoading();
+
+            fetch("/api/cart/update", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": "{{csrfToken}}" // Add CSRF protection if implemented
+                },
+                body: JSON.stringify({
+                    book_id: bookId,
+                    quantity: quantity
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    hideLoading();
+                    // Update UI elements if needed without full page reload
+                    // For simplicity, we'll just reload for now
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error("Error updating quantity:", error);
+                    hideLoading();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to update quantity. Please try again.'
+                    });
+                });
+        }
+
+        function checkoutCart() {
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Confirm Checkout',
+                text: 'Do you want to checkout these items? They will be reserved for you to pick up at the library.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#009688',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Checkout Now'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    proceedWithCheckout();
+                }
+            });
+        }
+
+        function proceedWithCheckout() {
+            showLoading();
+
+            fetch("/api/cart/checkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": "{{csrfToken}}" // Add CSRF protection if implemented
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    hideLoading();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Checkout Complete!',
+                        text: data.message || 'Your books have been reserved successfully.',
+                        confirmButtonColor: '#009688'
+                    }).then(() => {
+                        // Redirect to booking history page
+                        window.location.href = "/history";
+                    });
+                })
+                .catch(error => {
+                    console.error("Error booking items:", error);
+                    hideLoading();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Checkout Failed',
+                        text: 'We could not complete your checkout. Please try again or contact library staff for assistance.',
+                        confirmButtonColor: '#009688'
+                    });
+                });
+        }
+
+        // Initialize SweetAlert2 if it exists
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load SweetAlert2 dynamically if not already available
+            if (typeof Swal === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                document.head.appendChild(script);
+            }
+
+            // Register Handlebars helper for date formatting
+            if (typeof Handlebars !== 'undefined') {
+                Handlebars.registerHelper('formatDate', function(date) {
+                    if (!date) return '';
+                    const dateObj = new Date(date);
+                    return dateObj.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,376 @@
+{{!-- User Management Page --}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="/styles/user_management.css">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and Page Layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 60px;
+            /* Prevent footer from covering content */
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        h2,
+        h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* User Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        /* Forms */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        /* Add User Form */
+        .add-user button {
+            width: 100%;
+            background-color: #2ecc71;
+        }
+
+        .add-user button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Reset Password Form */
+        .reset-password {
+            text-align: center;
+        }
+
+        .reset-password form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .reset-password button {
+            width: 100%;
+            background-color: #e74c3c;
+        }
+
+        .reset-password button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            nav ul {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            table th,
+            table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1>User Management</h1>
+        <nav>
+            <ul>
+                <li><a href="/adminDashboard">Admin Dashboard</a></li>
+                <li><a href="/adminLogout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {{!-- Registered Users Section --}}
+        <section class="user-list">
+            <h2>Registered Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <td>{{this.username}}</td>
+                        <td>{{this.fullname}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phoneNumber}}</td> <!-- Changed contact to phoneNumber -->
+                        <td>{{this.role}}</td>
+                        <td>
+                            <form method="POST" action="/deleteUser/{{this.username}}">
+                                <button type="submit">Delete</button>
+                            </form>
+                            <form method="POST" action="/resetPassword/{{this.username}}">
+                                <button type="submit">Reset Password</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="6">No registered users.</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </section>
+
+        {{!-- Add User Form --}}
+        <section class="add-user">
+            <h3>Add New User</h3>
+            <form method="POST" action="/addUser">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phoneNumber">Phone Number:</label> <!-- Changed contact to phoneNumber -->
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="User">User</option>
+                    <option value="Admin">Admin</option>
+                </select>
+
+                <button type="submit">Add User</button>
+            </form>
+        </section>
+
+        {{!-- Reset Password Form --}}
+        <section class="reset-password">
+            <h3>Reset User Password</h3>
+            <form method="POST" action="/resetPasswordByForm">
+                <label for="resetUsername">Username:</label>
+                <input type="text" id="resetUsername" name="resetUsername" required>
+
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+
+                <button type="submit">Reset Password</button>
+            </form>
+        </section>
+
+        {{!-- Pending Users Section --}}
+        <section>
+            <h2>Pending User Approvals</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th> <!-- Changed contact to phoneNumber -->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each pendingUsers}}
+                    <tr>
+                        <td>{{this.username}}</td>
+                        <td>{{this.fullname}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phoneNumber}}</td> <!-- Changed contact to phoneNumber -->
+                        <td>
+                            <form method="POST" action="/approveUser/{{this.username}}">
+                                <button type="submit">Approve</button>
+                            </form>
+                            <form method="POST" action="/rejectUser/{{this.username}}">
+                                <button type="submit">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="5">No pending approvals.</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </section>
+
+        {{!-- Approved Users Section --}}
+        <section>
+            <h2>Approved Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th> <!-- Changed contact to phoneNumber -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each approvedUsers}}
+                    <tr>
+                        <td>{{this.username}}</td>
+                        <td>{{this.fullname}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phoneNumber}}</td> <!-- Changed contact to phoneNumber -->
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="4">No approved users.</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Library Resource Booking System</p>
+    </footer>
+
+    <script src="/scripts/user_management.js"></script>
+</body>
+
+</html>

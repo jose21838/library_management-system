@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Booking History - Library System</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/navigation.js"></script>
+    <style>
+        /* Additional styling for booking history */
+        .booking-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-history-table th,
+        .booking-history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .booking-history-table th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .booking-history-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .book-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-category {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .book-id {
+            font-size: 0.8em;
+            color: #999;
+        }
+
+        .status {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .status-active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-returned {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-overdue {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .no-bookings {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+            border-radius: p8px;
+            margin-top: 20px;
+        }
+
+        .no-bookings i {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not([disabled]) {
+            background-color: #f1f1f1;
+        }
+
+        .pagination button[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #page-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #fff8f8;
+            border: 1px solid #ffebee;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .error-state i {
+            font-size: 32px;
+            color: #f44336;
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: #c62828;
+            margin-bottom: 15px;
+        }
+
+        .retry-button {
+            padding: 8px 16px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .retry-button:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Detailed view styling */
+        .booking-details {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .booking-details.active {
+            display: block;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 150px;
+            color: #555;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .view-details-btn {
+            background-color: transparent;
+            border: none;
+            color: #1976d2;
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        .view-details-btn:hover {
+            color: #0d47a1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="leftbar">
+        <div class="dashboard">
+            <h2>USER DASHBOARD</h2>
+        </div>
+        <a href="/userProfile">My Profile</a>
+        <a href="/borrow">Borrow books</a>
+        <a href="/cart">My Cart</a>
+        <a href="/payments">Make Payments</a>
+        <a href="/return">Return Books</a>
+        <a href="/history" class="active">Booking History</a>
+        <a href="/reserve">Reserve Resources</a>
+        <a href="/feedback">Provide Feedback</a>
+        <a href="/help">Help and Support</a>
+        <a href="/settings">Settings</a>
+    </div>
+
+    <div class="mainbody">
+        <div class="navbar">
+            <button class="logout-btn" onclick="redirectToLogout()" type="button"><span></span>LOG OUT</button>
+        </div>
+
+        <!-- Booking History Section -->
+        <div id="bookingHistory" class="section">
+            <h2>Your Booking History</h2>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <select id="status-filter">
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="returned">Returned</option>
+                    <option value="overdue">Overdue</option>
+                </select>
+
+                <div class="date-filter">
+                    <label for="date-from">From:</label>
+                    <input type="date" id="date-from">
+                    <label for="date-to">To:</label>
+                    <input type="date" id="date-to">
+                </div>
+
+                <button id="apply-filters">Apply Filters</button>
+                <button id="reset-filters">Reset</button>
+            </div>
+
+            <!-- Loading State -->
+            {{#if loading}}
+            <div id="loading" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading your booking history...</p>
+            </div>
+            {{/if}}
+
+            <!-- Error State -->
+            {{#if error}}
+            <div id="error" class="error-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p class="error-message" id="error-message">{{errorMessage}}</p>
+                <button id="retry-btn" class="retry-button">Retry</button>
+            </div>
+            {{/if}}
+
+            <!-- Booking History Table Container -->
+            <div id="historyList">
+                {{#if bookings.length}}
+                <table class="booking-history-table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Book Details</th>
+                            <th>Booking Date</th>
+                            <th>Expected Return</th>
+                            <th>Actual Return</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bookings}}
+                        <tr data-booking-id="{{this.booking_id}}">
+                            <td>{{this.booking_id}}</td>
+                            <td>
+                                <div class="book-info">
+                                    <strong>{{this.title}}</strong>
+                                    <span class="book-category">{{this.category}}</span>
+                                    <span class="book-id">ID: {{this.book_id}}</span>
+                                </div>
+                            </td>
+                            <td>{{formatDate this.booking_date}}</td>
+                            <td>{{formatDate this.expected_return_date}}</td>
+                            <td>{{#if this.return_date}}{{formatDate this.return_date}}{{else}}Not returned{{/if}}</td>
+                            <td>{{this.duration_days}} days</td>
+                            <td class="status status-{{lowercase this.status}}">
+                                {{this.status}}
+                            </td>
+                            <td>
+                                <button class="view-details-btn" data-id="{{this.booking_id}}">View Details</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="details-container">
+                                <div id="details-{{this.booking_id}}" class="booking-details">
+                                    <h4>Booking Details</h4>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Fine Amount:</span>
+                                        <span class="detail-value">
+                                            {{#if this.fine_amount}}
+                                            ${{this.fine_amount}}
+                                            {{else}}
+                                            $0.00
+                                            {{/if}}
+                                        </span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Fine Status:</span>
+                                        <span class="detail-value">
+                                            {{#if this.fine_paid}}
+                                            Paid
+                                            {{else}}
+                                            {{#if this.fine_amount}}
+                                            Unpaid
+                                            {{else}}
+                                            No fine
+                                            {{/if}}
+                                            {{/if}}
+                                        </span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Librarian Notes:</span>
+                                        <span class="detail-value">
+                                            {{#if this.notes}}
+                                            {{this.notes}}
+                                            {{else}}
+                                            No notes
+                                            {{/if}}
+                                        </span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Book Condition:</span>
+                                        <span class="detail-value">
+                                            {{#if this.condition_on_return}}
+                                            {{this.condition_on_return}}
+                                            {{else}}
+                                            Not assessed
+                                            {{/if}}
+                                        </span>
+                                    </div>
+                                    {{#if this.location}}
+                                    <div class="detail-row">
+                                        <span class="detail-label">Pickup Location:</span>
+                                        <span class="detail-value">{{this.location}}</span>
+                                    </div>
+                                    {{/if}}
+                                    {{#if this.status}}
+                                    <div class="detail-row">
+                                        <span class="detail-label">Actions:</span>
+                                        <span class="detail-value">
+                                            {{#if (eq this.status "Active")}}
+                                            <a href="/return?id={{this.booking_id}}"
+                                                class="action-btn return-btn">Return Book</a>
+                                            {{/if}}
+                                            {{#if (eq this.status "Overdue")}}
+                                            <a href="/return?id={{this.booking_id}}"
+                                                class="action-btn return-btn urgent">Return Book Now</a>
+                                            <a href="/payments?id={{this.booking_id}}" class="action-btn pay-btn">Pay
+                                                Fine</a>
+                                            {{/if}}
+                                        </span>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <div class="no-bookings">
+                    <i class="fas fa-book"></i>
+                    <h3>No bookings found</h3>
+                    <p>You haven't made any bookings yet. Visit the <a href="/borrow">Borrow Books</a> section to get
+                        started.</p>
+                </div>
+                {{/if}}
+            </div>
+
+            <!-- Pagination Controls -->
+            {{#if pagination}}
+            <div id="pagination" class="pagination">
+                <button id="prev-page" {{#if isFirstPage}}disabled{{/if}}>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span id="page-info">Page {{currentPage}} of {{totalPages}}</span>
+                <button id="next-page" {{#if isLastPage}}disabled{{/if}}>
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <script>
+        function redirectToLogout() {
+            // Clear localStorage when logging out
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("username");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("token");
+            window.location.href = "/userLogout";
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get DOM elements for pagination
+            const prevButton = document.getElementById('prev-page');
+            const nextButton = document.getElementById('next-page');
+            const retryButton = document.getElementById('retry-btn');
+
+            // Set up pagination listeners if elements exist
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    window.location.href = "/history?page={{prevPage}}";
+                });
+            }
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    window.location.href = "/history?page={{nextPage}}";
+                });
+            }
+
+            // Set up retry button listener if it exists
+            if (retryButton) {
+                retryButton.addEventListener('click', () => {
+                    window.location.reload();
+                });
+            }
+
+            // Set up view details buttons
+            const detailButtons = document.querySelectorAll('.view-details-btn');
+            detailButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const bookingId = this.getAttribute('data-id');
+                    const detailsDiv = document.getElementById(`details-${bookingId}`);
+
+                    // Toggle visibility
+                    if (detailsDiv.classList.contains('active')) {
+                        detailsDiv.classList.remove('active');
+                        this.textContent = 'View Details';
+                    } else {
+                        // Hide all other detail sections first
+                        document.querySelectorAll('.booking-details').forEach(div => {
+                            div.classList.remove('active');
+                        });
+                        document.querySelectorAll('.view-details-btn').forEach(btn => {
+                            btn.textContent = 'View Details';
+                        });
+
+                        // Show this one
+                        detailsDiv.classList.add('active');
+                        this.textContent = 'Hide Details';
+                    }
+                });
+            });
+
+            // Set up filter functionality
+            const applyFiltersBtn = document.getElementById('apply-filters');
+            const resetFiltersBtn = document.getElementById('reset-filters');
+
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function () {
+                    const statusFilter = document.getElementById('status-filter').value;
+                    const dateFrom = document.getElementById('date-from').value;
+                    const dateTo = document.getElementById('date-to').value;
+
+                    let url = `/history?page=1`;
+                    if (statusFilter !== 'all') {
+                        url += `&status=${statusFilter}`;
+                    }
+                    if (dateFrom) {
+                        url += `&from=${dateFrom}`;
+                    }
+                    if (dateTo) {
+                        url += `&to=${dateTo}`;
+                    }
+
+                    window.location.href = url;
+                });
+            }
+
+            if (resetFiltersBtn) {
+                resetFiltersBtn.addEventListener('click', function () {
+                    window.location.href = '/history';
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

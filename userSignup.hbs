@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="user_signup.css">
+    <style>
+        /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Header */
+header {
+    background-color: #009688;;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Sign-Up Form Section */
+.signup-form {
+    background: white;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.signup-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.signup-form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.signup-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Password Error Message */
+#error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: none;
+    /* Hidden by default */
+}
+
+/* Buttons */
+.signup-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.signup-form button:hover {
+    background-color: #555;
+}
+
+/* Success Notification */
+#successNotification {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #28a745;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+#successNotification button {
+    background-color: #fff;
+    color: #273781;
+    border: none;
+    padding: 8px 16px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#successNotification button:hover {
+    background-color: #e9ecef;
+}
+
+/* Footer */
+footer {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+}
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>User Registration</h1>
+    </header>
+
+    <main>
+        <section class="signup-form">
+            <h2>Create Account</h2>
+            {{#if error}}
+            <div class="error-message">
+                <p>{{error}}</p>
+            </div>
+            {{/if}}
+
+            <form id="signupForm" action="/userSignup" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" required>
+            
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            
+                <label for="phoneNumber">Contact:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+            
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required onkeyup="validatePassword()">
+                <p id="passwordStrength"></p> <!-- Password Strength Message -->
+            
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required onkeyup="checkPasswordMatch()">
+                <p id="passwordMismatch" style="color: red;"></p> <!-- Password Mismatch Message -->
+            
+                <input type="hidden" name="role" value="user">
+                <input type="hidden" name="status" value="pending">
+            
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <p>Already have an account? <a href="/userLogin">Login here</a></p>
+        </section>
+    </main>
+
+    {{#if success}}
+    <div id="successNotification">
+        <p>Registration Successful! Redirecting to login page...</p>
+    </div>
+    {{/if}}
+
+    <footer>
+        <p>&copy; 2025 Library Resource Booking System</p>
+    </footer>
+
+    <script>
+        document.getElementById("signupForm").addEventListener("submit", function (event) {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            // Validate passwords match before submitting
+            if (password !== confirmPassword) {
+                event.preventDefault(); // Prevent form submission
+                alert("Passwords do not match!");
+                return false;
+            }
+            // Form will submit normally if passwords match
+        });
+
+        function checkPasswordMatch() {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const message = document.getElementById("passwordMismatch");
+
+            if (password !== confirmPassword) {
+                message.textContent = "Passwords do not match!";
+            } else {
+                message.textContent = "";
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const strengthMessage = document.getElementById("passwordStrength");
+
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /[0-9]/.test(password); // Fixed regex from [0,9] to [0-9]
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const isLongEnough = password.length >= 8;
+
+            let strength = 0;
+            if (hasUpperCase) strength++;
+            if (hasLowerCase) strength++;
+            if (hasNumbers) strength++;
+            if (hasSpecialChar) strength++;
+            if (isLongEnough) strength++;
+
+            if (strength === 5) {
+                strengthMessage.textContent = "Strong Password ✅";
+                strengthMessage.style.color = "green";
+            } else if (strength >= 3) {
+                strengthMessage.textContent = "Moderate Password ⚠️";
+                strengthMessage.style.color = "orange";
+            } else {
+                strengthMessage.textContent = "Weak Password ❌";
+                strengthMessage.style.color = "red";
+            }
+        }
+    </script>
+</body>
+
+</html>

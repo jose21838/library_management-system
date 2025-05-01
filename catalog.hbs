@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Catalog</title>
+</head>
+
+<body>
+    <header>
+        <h1>Library Catalog</h1>
+    </header>
+    <main>
+        <section class="catalog">
+            <h2>Available Books</h2>
+            {{#if resources}}
+            {{#each resources}}
+            <div class="book-item">
+                <p><strong>{{this.resourceName}}</strong> - Available in Section {{this.ResourceType}}</p>
+                <p>Added on: {{this.createdAt}}</p>
+                <button onclick="bookResource('{{this.resourceID}}')">Book Now</button>
+            </div>
+            {{/each}}
+            {{else}}
+            <p>No books available at the moment.</p>
+            {{/if}}
+        </section>
+    </main>
+</body>
+
+</html>

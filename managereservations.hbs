@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reservation Approvals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #e1e1e1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .status-approved {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .action-buttons form {
+            display: inline;
+            margin: 0 2px;
+        }
+
+        .btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .approve-btn {
+            background-color: #27ae60;
+        }
+
+        .reject-btn {
+            background-color: #c0392b;
+        }
+
+        .approve-btn:hover {
+            background-color: #219150;
+        }
+
+        .reject-btn:hover {
+            background-color: #a32d24;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-container">
+        <h1>Manage Reservation Requests</h1>
+        <a href="/adminDashboard" class="back-link">← Back to Admin Dashboard</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Resource</th>
+                <th>Date</th>
+                <th>Duration (hrs)</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each reservations}}
+            <tr>
+                <td>{{this.username}}</td>
+                <td>{{this.resource_name}}</td>
+                <td>{{this.reservation_date}}</td>
+                <td>{{this.duration}}</td>
+                <td class="status-{{this.status}}">
+                    {{this.status}}
+                </td>
+                <td class="action-buttons">
+                    {{#if this.isPending}}
+                    <form action="/managereservations/approve/{{this.reservation_id}}" method="POST">
+                        <button class="btn approve-btn">Approve</button>
+                    </form>
+                    <form action="/managereservations/reject/{{this.reservation_id}}" method="POST">
+                        <button class="btn reject-btn">Reject</button>
+                    </form>
+                    {{else}}
+                    <em>No further action</em>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+
+</html>

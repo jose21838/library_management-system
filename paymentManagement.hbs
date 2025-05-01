@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-btn {
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: white;
+            display: none;
+        }
+
+        /* Typography */
+        h1 {
+            color: #2c3e50;
+            margin: 2rem 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Table styles */
+        .table,
+        table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td,
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table thead th,
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover,
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Button styles */
+        .btn,
+        button {
+            display: inline-block;
+            font-weight: 500;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+            margin: 0.25rem;
+        }
+
+        .approve-btn {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+
+        .approve-btn:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .reject-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border-color: #dc3545;
+        }
+
+        .reject-btn:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        /* Margin utility */
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        /* Empty state message */
+        .payments-list p,
+        p {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Form styles */
+        form {
+            margin: 0;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <span class="menu-btn">☰ Menu</span>
+        <a href="/adminDashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <h1>Payment Management</h1>
+
+    {{#if payments.length}}
+    <table>
+        <thead>
+            <tr>
+                <th>Payment ID</th>
+                <th>Transaction ID</th>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Amount</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Time of Payment</th>
+                <th>Time of Verification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each payments}}
+            <tr>
+                <td>{{this.payment_id}}</td>
+                <td>{{this.transaction_id}}</td>
+                <td>{{this.user_id}}</td>
+                <td>{{this.username}}</td>
+                <td>{{this.email}}</td>
+                <td>{{this.amount}}</td>
+                <td>{{this.reason}}</td>
+                <td>{{this.status}}</td>
+                <td>{{this.time_of_payment}}</td>
+                <td>{{this.time_of_verification}}</td>
+                <td>
+                    {{#eq this.status "Pending"}}
+                    <form action="/managePayments/approve/{{this.paymentId}}" method="POST" style="display:inline;">
+                        <button type="submit" class="approve-btn">Approve</button>
+                    </form>
+                    <form action="/managePayments/reject/{{this.paymentId}}" method="POST" style="display:inline;">
+                        <button type="submit" class="reject-btn">Reject</button>
+                    </form>
+                    {{else}}
+                    <span>No actions available</span>
+                    {{/eq}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <p>No payments found.</p>
+    {{/if}}
+
+    <a href="/adminDashboard">Back to Dashboard</a>
+
+</body>
+
+</html>

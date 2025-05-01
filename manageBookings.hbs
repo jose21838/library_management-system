@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Management</title>
+    <link rel="stylesheet" href="/css/manage_bookings.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            width: 250px;
+            height: calc(100vh - 70px);
+            position: fixed;
+            top: 70px;
+            left: -250px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            overflow-y: auto;
+            padding-top: 1.25rem;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 1rem 1.25rem;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Wrapper and content styles */
+        .wrapper {
+            display: flex;
+            margin-top: 70px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .wrapper.shifted {
+            margin-left: 250px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 1.25rem;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* Booking section styles */
+        .booking-section {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        #refreshBookings {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            margin-bottom: 1rem;
+        }
+
+        #refreshBookings:hover {
+            background-color: #5a6268;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Button styles */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        button {
+            display: inline-block;
+            font-weight: 500;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+            cursor: pointer;
+            border: none;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        button[type="submit"].reject {
+            background-color: #dc3545;
+        }
+
+        button[type="submit"].reject:hover {
+            background-color: #c82333;
+        }
+
+        /* Status styles */
+        .Approved {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .Rejected {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .Pending {
+            color: #ffc107;
+            font-weight: 500;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .wrapper.shifted {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            th,
+            td {
+                padding: 0.75rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+        }/* Approve Button */
+button[type="submit"] {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838; /* Darker Green */
+}
+
+/* Reject Button */
+button[type="submit"].reject {
+    background-color: #dc3545; /* Red */
+}
+
+button[type="submit"].reject:hover {
+    background-color: #c82333; /* Darker Red */
+}
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="menu-button">☰ Menu</button>
+        <h1>Booking Management</h1>
+        <nav>
+            <!-- Navigation links here -->
+        </nav>
+    </header>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="/adminDashboard">Dashboard</a></li>
+                <li><a href="/adminProfile">My Profile</a></li>
+                <li><a href="/manageBookings">Manage Bookings</a></li>
+                <li><a href="/resourceManagement">Manage Books</a></li>
+                <li><a href="/userManagement">User Management</a></li>
+                <li><a href="/paymentManagement">Payment Management</a></li>
+                <li><a href="/feedbackManagement">feedback</a></li>
+                <li><a href="/reports">Reports & Analytics</a></li>
+                <li><a href="/adminLogout">Logout</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <section class="booking-section">
+                <h2>Pending Bookings</h2>
+                <button id="refreshBookings">Refresh Bookings</button>
+                <table id="bookingTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Book Title</th>
+                            <th>Booking Date</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bookings}}
+                        <tr>
+                            <td>{{this.username}}</td>
+                            <td>{{this.email}}</td>
+                            <td>{{this.book_title}}</td>
+                            <td>{{this.booking_date}}</td>
+                            <td>{{this.quantity}}</td>
+                            <td>
+                                {{#if this.isPending}}
+                                <span class="Pending">{{this.status}}</span>
+                                {{else}}
+                                <span class="{{this.status}}">{{this.status}}</span>
+                                {{/if}}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    {{#if this.isPending}}
+                                    <form action="/manageBookings/approve/{{this.booking_id}}" method="POST"
+                                        style="display:inline;">
+                                        <button type="submit">Approve</button>
+                                    </form>
+                                    <form action="/manageBookings/reject/{{this.booking_id}}" method="POST"
+                                        style="display:inline;">
+                                        <button type="submit" class="reject">Reject</button>
+                                    </form>
+                                    {{else}}
+                                    <span class="{{this.status}}">{{this.status}}</span>
+                                    {{/if}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <footer>
+        <p>&copy; 2025 Library Resource Booking System</p>
+    </footer>
+    <script>
+        // Toggle sidebar
+        document.querySelector('.menu-button').addEventListener('click', function () {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.wrapper').classList.toggle('shifted');
+        });
+        // Refresh bookings
+        document.getElementById('refreshBookings').addEventListener('click', function () {
+            window.location.reload();
+        });
+    </script>
+</body>
+
+</html>

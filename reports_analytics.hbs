@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reports and Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+        }
+
+        .header {
+            background: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .navigation {
+            background: #333;
+            text-align: center;
+        }
+
+        .navigation a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            display: inline-block;
+        }
+
+        .navigation a.active,
+        .navigation a:hover {
+            background: #555;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        canvas {
+            margin-top: 20px;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            margin-top: 15px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .btn-download {
+            background-color: #2196F3;
+        }
+
+        .btn:hover,
+        .btn-download:hover {
+            opacity: 0.9;
+        }
+
+        /* Tabs */
+        .tab-header {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab-link {
+            background: #eee;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        .tab-link.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .tab-link:hover {
+            background: #ccc;
+        }
+
+        .tab-content {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Reports and Analytics</h1>
+    </div>
+
+    <div class="navigation">
+        <a href="/adminDashboard">Admin Dashboard</a>
+        <a href="/reports_analytics" class="active">Reports & Analytics</a>
+        <a href="/adminLogout">Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <div class="tab-header">
+                <button class="tab-link active" onclick="openTab(event, 'booksTab')">📚 Books Report</button>
+                <button class="tab-link" onclick="openTab(event, 'usersTab')">👥 User Report</button>
+                <button class="tab-link" onclick="openTab(event, 'transactionsTab')">🔄 Transaction Report</button>
+                <button class="tab-link" onclick="openTab(event, 'finesTab')">💰 Fine Report</button>
+            </div>
+
+            <!-- Books Report Tab -->
+            <div id="booksTab" class="tab-content" style="display: block;">
+                <h2>📚 Books Report</h2>
+                <div id="books-preview">
+                    <h3>Books Overview</h3>
+                    <p>Available: <span id="available-books"></span></p>
+                    <p>Borrowed: <span id="borrowed-books"></span></p>
+                    <p>Popular: <span id="popular-books"></span></p>
+                    <canvas id="booksChart"></canvas>
+                </div>
+                <h3>Books List</h3>
+                <table id="books-table">
+                    <thead>
+                        <tr>
+                            <th>Book ID</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Available Copies</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <a href="/reports_analytics/download/books" class="btn btn-download">Download Books Report</a>
+            </div>
+
+            <!-- Users Report Tab -->
+            <div id="usersTab" class="tab-content">
+                <h2>👥 User Report</h2>
+                <canvas id="userChart"></canvas>
+                <h3>User List</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>PhoneNumber</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userList"></tbody>
+                </table>
+                <a href="/reports_analytics/download/users" class="btn btn-download">Download User Report</a>
+            </div>
+
+            <!-- Transactions Report Tab -->
+            <div id="transactionsTab" class="tab-content">
+                <h2>🔄 Transaction Report</h2>
+                <canvas id="transactionsChart"></canvas>
+                <h3>Transaction List</h3>
+                <table border="1" id="transactionTable" style="margin-bottom: 40px;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Reason</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <a href="/reports_analytics/download/transactions" class="btn btn-download">Download Transaction
+                    Report</a>
+            </div>
+
+            <!-- Fines Report Tab -->
+            <div id="finesTab" class="tab-content">
+                <h2>💰 Fine Report</h2>
+                <canvas id="finesChart"></canvas>
+                <h3>Fine List</h3>
+                <table id="fines-table">
+                    <thead>
+                        <tr>
+                            <th>Fine ID</th>
+                            <th>User ID</th>
+                            <th>Fine Type</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Days Overdue</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <a href="/reports_analytics/download/fines" class="btn btn-download">Download Fine Report</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabId) {
+            const tabs = document.querySelectorAll(".tab-content");
+            tabs.forEach(tab => tab.style.display = "none");
+            const tabLinks = document.querySelectorAll(".tab-link");
+            tabLinks.forEach(link => link.classList.remove("active"));
+            document.getElementById(tabId).style.display = "block";
+            evt.currentTarget.classList.add("active");
+        }
+
+        async function drawChart(canvasId, chartLabel, labels, data, backgroundColors) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: chartLabel, data: data, backgroundColor: backgroundColors }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        }
+
+        async function fetchAndDraw() {
+            try {
+                const books = await fetch('/api/books-report').then(res => res.json());
+                document.getElementById('available-books').innerText = books.available;
+                document.getElementById('borrowed-books').innerText = books.borrowed;
+                document.getElementById('popular-books').innerText = books.popular;
+
+                const booksTable = document.getElementById('books-table').getElementsByTagName('tbody')[0];
+                books.list.forEach(book => {
+                    const row = booksTable.insertRow();
+                    row.insertCell(0).innerText = book.Book_id;
+                    row.insertCell(1).innerText = book.Title;
+                    row.insertCell(2).innerText = book.category || 'N/A';
+                    row.insertCell(3).innerText = book.available_copies;
+                });
+
+                drawChart('booksChart', 'Books Overview', books.chartLabels, books.chartData, ['#4CAF50', '#FFC107', '#2196F3']);
+
+                fetch('/admin/users')
+                    .then(response => response.json())
+                    .then(users => {
+                        const userList = document.getElementById('userList');
+                        users.forEach(user => {
+                            const userRow = document.createElement('tr');
+                            userRow.innerHTML = `
+                <td>${user.user_id}</td>
+                <td>${user.username}</td>
+                <td>${user.fullname}</td>
+                <td>${user.email}</td>
+                <td>${user.phoneNumber}</td>
+                <td>${user.role}</td>
+            `;
+                            userList.appendChild(userRow);
+                        });
+                    });
+
+                fetch('/admin/users-stats')
+                    .then(response => response.json())
+                    .then(data => {
+                        const roles = data.map(item => item.role);
+                        const counts = data.map(item => item.count);
+                        drawChart('userChart', 'Number of Users by Role', roles, counts, ['#4e73df', '#1cc88a']);
+                    });
+
+                const transactions = await fetch('/api/transaction-report').then(res => res.json());
+                const transactionTable = document.getElementById('transactionTable').getElementsByTagName('tbody')[0];
+                transactions.list.forEach(tx => {
+                    const row = transactionTable.insertRow();
+                    row.insertCell(0).innerText = tx.transaction_id;
+                    row.insertCell(1).innerText = tx.username;
+                    row.insertCell(2).innerText = tx.email;
+                    row.insertCell(3).innerText = tx.reason;
+                    row.insertCell(4).innerText = tx.amount;
+                    row.insertCell(5).innerText = tx.status;
+                    row.insertCell(6).innerText = new Date(tx.time_of_payment).toLocaleString();
+                });
+
+                drawChart('transactionsChart', 'Transaction Overview', transactions.chartLabels, transactions.chartData, ['#FF6384', '#36A2EB', '#FFCE56']);
+
+                const fines = await fetch('/api/fine-report').then(res => res.json());
+                const finesTable = document.getElementById('fines-table').getElementsByTagName('tbody')[0];
+                fines.list.forEach(fine => {
+                    const row = finesTable.insertRow();
+                    row.insertCell(0).innerText = fine.fine_id;
+                    row.insertCell(1).innerText = fine.user_id;
+                    row.insertCell(2).innerText = fine.fine_type;
+                    row.insertCell(3).innerText = fine.description;
+                    row.insertCell(4).innerText = fine.amount;
+                    row.insertCell(5).innerText = fine.days_overdue;
+                    row.insertCell(6).innerText = fine.status;
+                    row.insertCell(7).innerText = new Date(fine.created_at).toLocaleString();
+                });
+
+                if (fines.chartLabels && fines.chartData) {
+                    drawChart('finesChart', 'Fines Overview', fines.chartLabels, fines.chartData, ['#FF5733', '#33FF57', '#3357FF']);
+                }
+
+            } catch (err) {
+                console.error("Error fetching reports:", err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchAndDraw);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = [12, 19, 3, 5]; // replace with real data
+            const fineData = [2, 10, 8, 4]; // replace with real data
+
+            new Chart(document.getElementById('userChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+                    datasets: [{
+                        label: 'Users',
+                        data: userData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById('fineChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+                    datasets: [{
+                        label: 'Fines',
+                        data: fineData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                    }]
+                }
+            });
+        });
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fineData = {{{fineData}}}; // Handlebars injects this directly
+
+    const ctx = document.getElementById('fineChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: fineData.labels,
+        datasets: [{
+          label: 'Fine Amounts',
+          data: fineData.values,
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fineData = {{{fineData}}}; // Handlebars injects this directly
+
+    const ctx = document.getElementById('fineChart').getContext('2d');
+    new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: fineData.labels,
+        datasets: [{
+        label: 'Fine Amounts',
+        data: fineData.values,
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+        y: {
+            beginAtZero: true
+        }
+        }
+    }
+    });
+});
+</script>
+
+
+</body>
+
+</html>
